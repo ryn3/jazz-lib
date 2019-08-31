@@ -53,7 +53,7 @@ The Mongo database uses localhost: 27017
 
 ## About
 
-This app has been inspired in part by the following:
-* Python toolkit
-* Discogs-cli
-
+This app was inspired in part by:
+* python-prompt-toolkit by Jonathan Slenders <https://github.com/prompt-toolkit/python-prompt-toolkit>
+* discogs-cli by Jesse Ward <https://github.com/jesseward/discogs-cli>
+* spotipy by Paul Lamere <https://github.com/plamere/spotipy>
