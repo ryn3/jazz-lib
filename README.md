@@ -1,15 +1,15 @@
 # jazz-lib
 
-This app acts as a library search tool for Discogs' jazz records. Search by decade(s)/year(s), country(s), label(s), and then artist(s)  
+This app acts as a library search tool for Discogs' jazz records. Search by decade(s)/year(s), country(s), label(s), and then artist(s). Then select an album to see its Discogs meta data.   
 
 Download MongoDB if needed from <https://www.mongodb.com/download-center/community>
 
 ## Specifications
 The Mongo database uses localhost: 27017
 
-* Database name: **discogs_masters** 
+* Database name: **final_jazz_releases** 
 
-* Collections: **current_albums** (saved Spotify albums) **current_masters** (Discogs masters). 
+* Collections: **current**
 
 ## Dependencies
 
@@ -26,6 +26,10 @@ The Mongo database uses localhost: 27017
 ### 2. Run jazz-lib
 	
 	$ python3 main.py
+
+### 3. Search
+
+Press <TAB> to view options sorted by number of albums. Each parameter can take comma-separated inputs (i.e. '1960, 1961, 1963').  
 
 #### Example: 
 
