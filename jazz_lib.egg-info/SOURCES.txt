@@ -1,6 +1,0 @@
-README.md
-setup.py
-jazz_lib.egg-info/PKG-INFO
-jazz_lib.egg-info/SOURCES.txt
-jazz_lib.egg-info/dependency_links.txt
-jazz_lib.egg-info/top_level.txt
