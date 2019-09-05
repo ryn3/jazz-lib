@@ -13,7 +13,13 @@ The Mongo database uses localhost: 27017
 
 ## Dependencies
 
-	$ pip install -r requirements.txt
+	$ pip3 install -r requirements.txt
+	$ git clone https://github.com/prompt-toolkit/python-prompt-toolkit.git
+	$ pip3 install -e python-prompt-toolkit
+	$ pip3 install discogs-cli
+	$ git clone git@github.com:savoy1211/discogs-cli.git
+	$ pip3 install -e discogs-cli
+	$ pip3 install spotipy
 
 ## Usage
 

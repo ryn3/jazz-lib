@@ -11,8 +11,6 @@ colorama==0.3.7
 configobj==5.0.6
 constantly==15.1.0
 cryptography==2.7
--e git+https://github.com/savoy1211/discogs-cli.git@cf0eb27283ea0e41cd61423f161c663df52d90e5#egg=discogs_cli
-discogs-cli-savoy1211==1.1.0
 discogs-client==2.2.1
 docutils==0.15.2
 example-pkg-verve3349==0.0.1
@@ -33,7 +31,6 @@ oauthlib==3.1.0
 olefile==0.45.1
 Pillow==5.1.0
 pkginfo==1.5.0.1
-prompt-toolkit==2.0.6
 pyasn1==0.4.2
 pyasn1-modules==0.2.1
 pycparser==2.19
@@ -56,8 +53,8 @@ SecretStorage==2.3.1
 service-identity==16.0.0
 simplejson==3.16.0
 six==1.12.0
--e git+https://github.com/savoy1211/spotipy.git@b7b4f3128e8ea4608adc1b3d5d4a1ffa9ac810a0#egg=spotipy
 ssh-import-id==5.6
+requests==2.20.0
 tqdm==4.35.0
 twine==1.13.0
 Twisted==19.7.0
