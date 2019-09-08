@@ -73,7 +73,6 @@ class metaCompleter(Completer):
         param_array = self.array
         param_dict = self.dict
 
-        
         family_colors = {}
         meta = self.meta
         out = ''
@@ -137,7 +136,8 @@ def main():
             Artist query
 
         """
-        artist = prompt('Enter an artist: ', completer=getArtistCompleter(year,country,label),complete_style=CompleteStyle.MULTI_COLUMN)
+        artist_obj = getArtistCompleter(year,country,label)
+        artist = prompt('Enter an artist: ', completer=metaCompleter(artist_obj["name"], artist_obj["dict"],artist_obj["meta"]),complete_style=CompleteStyle.MULTI_COLUMN)
         artist = prettyArray(artist[artist.find(")")+1:])
 
         """
@@ -310,28 +310,59 @@ def getArtistCompleter(year, country, label):
     client = pymongo.MongoClient("localhost", 27017)
     db = client.final_jazz_releases
     year = decadeCheck(year)
-    albums = db.current.find({"releases.release.released": {"$in": year},"releases.release.country":{"$in": country},"releases.release.labels.label.@name": {"$in": label}},{"releases.release.artists.artist.name" :1})
+    albums = db.current.find({"releases.release.released": {"$in": year},"releases.release.country":{"$in": country},"releases.release.labels.label.@name": {"$in": label}},{"releases.release.extraartists.artist.name" :1, "releases.release.extraartists.artist.role":1})
     artists_dict = {}
+    name = {}
     for album in albums:
-        name = ''
+        
+        #print(album)
         try:
-            name = album["releases"]["release"]["artists"]["artist"]["name"]
+            for each in album["releases"]["release"]["extraartists"]["artist"]:
+                key = each["name"]
+                value = each["role"]
+                if key in name.keys():
+                    name[key].append(value)
+                else:
+                    name[key] = []
+                    name[key].append(value)
+        except TypeError:
+            key = album["releases"]["release"]["extraartists"]["artist"]["name"]
+            value = album["releases"]["release"]["extraartists"]["artist"]["role"]
+            if key in name.keys():
+                name[key].append(value)
+            else:
+                name[key] = []
+                name[key].append(value)
         except:
-            name = album["releases"]["release"]["artists"]["artist"][0]["name"]
-        if name not in artists_dict:
-            artists_dict[name]=1
-        else:
-            artists_dict[name]+=1
+            n=1
+    for each_key in name.keys():
+        artists_dict[each_key] = len(name[each_key])
     artists_dict = sorted(artists_dict.items(), key=lambda x: x[1], reverse=False)
     new_arr = []
     for i in range(0,len(artists_dict)):
         new_arr.append(artists_dict[len(artists_dict)-1-int(i)])
     artist_names = []
     new_artists_dict = {}
+    meta_dict = {}
     for each in new_arr:
         artist_names.append(each[0])
-        new_artists_dict[each[0]] = each[1]
-    return noMetaCompleter(artist_names, new_artists_dict)
+        new_artists_dict[each[0]] = "_*"+str(each[1])
+        try:
+            meta_str = str(name[each[0]][:3])
+            meta_str = meta_str[1:len(meta_str)-1]
+            meta_dict[each[0]] = HTML(meta_str)
+
+        except:
+            meta_str =  str(name[each[0]])
+            meta_str = meta_str[1:len(meta_str)-1]
+            meta_dict[each[0]] = HTML(meta_str[1:10])
+
+    artistObj = {
+        "name": artist_names,
+        "dict": new_artists_dict,
+        "meta": meta_dict
+    }
+    return artistObj
 
 def getAlbumCompleter(year, country, label, artist):
     """
@@ -351,11 +382,13 @@ def getAlbumCompleter(year, country, label, artist):
     client = pymongo.MongoClient("localhost", 27017)
     db = client.final_jazz_releases
     year = decadeCheck(year)
-    albums = db.current.find({"releases.release.released": {"$in": year},"releases.release.country":{"$in": country},"releases.release.labels.label.@name": {"$in": label}},{"releases.release.@id":1,"releases.release.artists":1,"releases.release.title":1,"releases.release.released":1,"releases.release.country":1, "releases.release.labels.label":1})
+    albums = db.current.find({"releases.release.released": {"$in": year},"releases.release.country":{"$in": country},"releases.release.labels.label.@name": {"$in": label}, "releases.release.extraartists.artist.name":{"$in": artist}},{"releases.release.@id":1,"releases.release.artists":1,"releases.release.extraartists":1,"releases.release.title":1,"releases.release.released":1,"releases.release.country":1, "releases.release.labels.label":1})
     albums_dict = {}
     meta_dict = {}
     year_meta = {}
     album_id_dict = {}
+    #print("artists length::")
+    #print(albums)
     for album in albums:
         album_id =  album["releases"]["release"]["@id"]
         # album_id = album_id.get("@id")
@@ -370,15 +403,37 @@ def getAlbumCompleter(year, country, label, artist):
         current_year = album["releases"]["release"]["released"][:4]
         title = album["releases"]["release"]["title"]
         name = ''
+        #print(album)
         try:
-            name = album["releases"]["release"]["artists"]["artist"]["name"]
+            name = album["releases"]["release"]["extraartists"]["artist"]
         except:
-            name = album["releases"]["release"]["artists"]["artist"][0]["name"]
-        if name in artist:
-            albums_dict[title]=current_year+"_"+album_id+"*"+name
-            meta_dict[title] = HTML(current_year+" ["+label_name+", "+current_country+"]")
-            year_meta[title] = current_year
-        album_id_dict[title] = album_id
+            n=1
+            print('shit')
+        #    name = album["releases"]["release"]["extraartists"]["artist"][0]["name"]
+        #print(artist)
+        #print(name)
+        try:
+            artist_name = album["releases"]["release"]["artists"]["artist"][0]["name"]
+        except:
+            artist_name = album["releases"]["release"]["artists"]["artist"]["name"]
+
+        try:
+            for each_artist in name:
+                if each_artist["name"] in artist:
+                    albums_dict[title] = current_year+"_"+album_id+"*"+artist_name
+                    meta_dict[title] = HTML(current_year+" ["+label_name+", "+current_country+"]")
+                    year_meta[title] = current_year
+                album_id_dict[title] = album_id
+        except TypeError:
+            if name["name"] in artist:
+                albums_dict[title] = current_year+"_"+album_id+"*"+artist_name
+                meta_dict[title] = HTML(current_year+" ["+label_name+", "+current_country+"]")
+                year_meta[title] = current_year
+            album_id_dict[title] = album_id
+        except:
+            print("BLEPP")
+            n=1
+
     albums_dict = sorted(albums_dict.items(), key=lambda x: x[1], reverse=False)
     year_meta = sorted(year_meta.items(), key=lambda x: x[1], reverse=False)
     new_arr = []
