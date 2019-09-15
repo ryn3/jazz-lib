@@ -4,7 +4,7 @@ mkdir releases/JSON_final_jazz_releases
 dir="releases/final_jazz_releases"
 for f in "$dir"/*; do
   python3 xml2json.py -t xml2json -o $f".json" "$f"
-  mv $f".json" JSON_final_jazz_releases
+  mv $f".json" releases/JSON_final_jazz_releases
 done
 
 dir="releases/JSON_final_jazz_releases"
