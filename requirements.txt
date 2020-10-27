@@ -10,7 +10,7 @@ click==6.7
 colorama==0.3.7
 configobj==5.0.6
 constantly==15.1.0
-cryptography==2.7
+cryptography==3.2
 discogs-client==2.2.1
 docutils==0.15.2
 example-pkg-verve3349==0.0.1
