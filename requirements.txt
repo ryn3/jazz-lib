@@ -14,7 +14,7 @@ cryptography==2.7
 discogs-client==2.2.1
 docutils==0.15.2
 example-pkg-verve3349==0.0.1
-httplib2==0.9.2
+httplib2==0.19.0
 hyperlink==19.0.0
 idna==2.8
 incremental==17.5.0
